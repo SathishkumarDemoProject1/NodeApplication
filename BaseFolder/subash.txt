@@ -1,0 +1,89 @@
+package basicOfJava;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
+public class Grid {
+	class Row {
+		public List<Integer> count;
+		public List<List<String>> DataList;
+
+		Row(List<Integer> count, List<List<String>> data) {
+			this.count = count;
+			this.DataList = data;
+		}
+	}
+
+	public static void main(String[] args) {
+		Grid grid = new Grid();
+		List<List<String>> list = new ArrayList<>();
+		list.add(Arrays.asList("B", "2", "1"));
+		list.add(Arrays.asList("C", "2", "2"));
+		list.add(Arrays.asList("D", "3", "2"));
+		list.add(Arrays.asList("E", "1", "2"));
+		list.add(Arrays.asList("f", "2", "2"));
+		list.add(Arrays.asList("A", "1", "1"));
+		List<Row> rowList = new ArrayList<>();
+		list.forEach(dbData -> {
+			int pos = Integer.parseInt(dbData.get(1));
+			boolean isInserted = false;
+			List<Row> temRowList = new ArrayList<>();
+			for (Row row : rowList) {
+				if (!isInserted) {
+					if (row.count.size() >= pos
+							&& (row.count.get(pos-1) > row.DataList.get(pos-1).size() || row.count.get(pos-1) == 0)) {
+						isInserted = true;
+//						Integer tempCount = row.count.get(pos-1);
+//						// row.count.remove(pos);
+						row.count.set(pos-1,Integer.parseInt(dbData.get(2)));
+						List<String> tempData = row.DataList.get(pos-1);
+						tempData.add(dbData.get(0));
+						// row.DataList.remove(pos);
+						row.DataList.set(pos-1, tempData);
+					} else if (pos == (row.DataList.size() + 1)) {
+						isInserted = true;
+						row.count.add(Integer.parseInt(dbData.get(2)));
+						List<String> tempList = new ArrayList<String>();
+						tempList.add(dbData.get(0));
+						row.DataList.add(tempList);
+					} else if (pos > (row.DataList.size())) {
+						for (int i = row.DataList.size(); i < pos; i++) {
+							row.count.add(0);
+							List<String> tempList = new ArrayList<String>();
+							row.DataList.add(tempList);
+						}
+						isInserted = true;
+						row.count.add(Integer.parseInt(dbData.get(2)));
+						List<String> tempList = new ArrayList<String>();
+						tempList.add(dbData.get(0));
+						row.DataList.add(tempList);
+					}
+				}
+				temRowList.add(row);
+			}
+			if (!isInserted) {
+				Row row = grid.new Row(new ArrayList<>(), new ArrayList<>());
+				for (int i = row.DataList.size(); i < pos - 1; i++) {
+					row.count.add(0);
+					List<String> tempList = new ArrayList<String>();
+					row.DataList.add(tempList);
+				}
+				isInserted = true;
+				row.count.add(Integer.parseInt(dbData.get(2)));
+				List<String> tempList = new ArrayList<String>();
+				tempList.add(dbData.get(0));
+				row.DataList.add(tempList);
+				temRowList.add(row);
+			}
+			rowList.clear();
+			rowList.addAll(temRowList);
+		});
+		for (Row row : rowList) {
+			System.out.println(row.DataList);
+		}
+
+	}
+
+}
