@@ -4,6 +4,9 @@ Created on Dec 9, 2018
 @author: sathish
 '''
 import threading;
+import os;
+# import subprocess;
+from subprocess import Popen, PIPE, STDOUT
 
 def printthread(mincount,maxcount):
     print(mincount,maxcount)
@@ -26,4 +29,12 @@ for thread in threadWait:
     thread.start();
 for thread in threadWait:
     thread.join();
-print("thread end")
+
+
+p = Popen(['java', '-jar', 'test.jar',"Hai"], stdout=PIPE, stderr=STDOUT)
+p.wait()
+
+stdout= p.stdout
+print (stdout)
+for line in stdout:
+    print (line)
